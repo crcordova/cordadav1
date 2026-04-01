@@ -220,8 +220,9 @@ with tab2:
                  color_discrete_map={0: COLOR_OK, 1: COLOR_BAD},
                  labels={"target_default":"Default","score_equifax":"Score Equifax"},
                  template=TEMPLATE)
-    fig.update_layout(showlegend=False, height=380,
+    fig.update_layout(showlegend=False, height=780, margin=dict(t=50, b=40, l=40, r=20),
         title="Score Equifax: clientes en mora vs sin mora")
+    
     st.plotly_chart(fig, use_container_width=True)
 
     # Default por rubro
@@ -559,12 +560,12 @@ Un índice > 1.0 significa que ese rubro tiene **más quiebras de las esperadas*
 1. **Selección adversa** — el beneficio atrae empresas con mayor necesidad de liquidez inicial.
 2. **Empresas más nuevas y montos mayores** — los predictores más importantes del modelo.
 3. **Concentración sectorial** — si Comercio crece en la cartera, una crisis del sector afecta toda la cohorte simultáneamente (riesgo sistémico).
-4. **Señal estructural de fragilidad** — los datos de quiebras muestran si Comercio está sobrerrepresentado en insolvencias severas.
+4. **Señal estructural de fragilidad** — los datos de quiebras muestran que el rubro Comercio está sobrerrepresentado en insolvencias severas.
 """)
     st.markdown("""
 **Recomendación 1:** Antes de lanzar la campaña masiva, realizar un **piloto controlado** (A/B test) con ~500 clientes de Comercio, asignando aleatoriamente el mes de gracia. Esto permitirá medir el efecto causal real con un modelo de diferencias en diferencias o regresión con variable de tratamiento.  
 
-**Recomendación 2**: se recomendienda una estrategia de pricing inteligente, lograr segmentar a los clientes y en base a cada segmento asignar diferentes tasas y diferentes periodos de gracia.  
+**Recomendación 2**: se recomendienda una estrategia de pricing inteligente, lograr segmentar a los clientes y en base a cada segmento asignar diferentes tasas y periodos de gracia.  
 
 **Recomendación 3**: hacer campañar para diversificar cartera no para concentrar  
 Si la campaña se lanza de todas formas, mitigar con:
@@ -584,7 +585,7 @@ Si la campaña se lanza de todas formas, mitigar con:
 # TAB 4 — RESUMEN EJECUTIVO
 # ══════════════════════════════════════════════════════════════════════════
 with tab4:
-    st.header("📋 Resumen Ejecutivo para Gerencia de Riesgo")
+    st.header("Resumen Ejecutivo para Gerencia de Riesgo")
 
     st.subheader("Dataset")
     c1, c2, c3, c4 = st.columns(4)
@@ -619,16 +620,21 @@ with tab4:
 **Interpretación para Gerencia:**
 - El modelo identifica correctamente al cliente más riesgoso el **{cv_scores.mean()*100:.0f}% de las veces** (vs 50% al azar).
 - De cada 100 clientes que el modelo marca como riesgosos, **{ap/y_test.mean():.1f}x más** son morosos reales que si se eligieran al azar.
-- El modelo es un **punto de partida**. Con más variables (historial de pagos, flujo de caja) el rendimiento mejoraría significativamente.
+- El modelo es un **punto de partida**. Con más variables (historial de pagos, flujo de caja) o Feature Engineering (creación de nuevas variables), el rendimiento podría mejorarse significativamente.
 """)
 
     st.divider()
     st.subheader("Campaña '1 mes de gracia' — Comercio (P4)")
     st.error("""
-**Recomendación: NO lanzar la campaña masiva sin un piloto controlado.**
+**Recomendación: NO lanzar la campaña masiva**, con la excepción de un piloto controlado (A/B test) para medir el efecto real.
 
 El análisis muestra que la campaña aumentaría la tasa de default en Comercio por:
 selección adversa + concentración sectorial + señal de fragilidad estructural del rubro.
+             
+**Recomendación: Campaña de pricing.**
+En vez de un mes de gracia para todos, diseñar una campaña segmentada con diferentes beneficios según el perfil de riesgo 
+             y asi atraer al cliente que puede diversificar nuestra cartera. Modelo ML de clasificacion clientes.  
+             
 
 """)
 
